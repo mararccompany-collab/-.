@@ -150,7 +150,7 @@ export default function App() {
   if (showSplash) return <SplashScreen onEnter={() => setShowSplash(false)} />;
 
   if (loading) return (
-    <div className="min-h-screen min-h-[100dvh] flex items-center justify-center bg-[#050510]" dir="rtl">
+    <div className="flex-1 flex items-center justify-center bg-[#050510]" dir="rtl">
       <div className="text-center">
         <div className="w-14 h-14 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
         <p className="text-white text-base font-bold" style={{ fontFamily: 'Cairo' }}>⚽ العرباوية ماتش</p>
@@ -160,7 +160,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-[#050510]" dir="rtl">
+    <div className="flex-1 bg-[#050510]" dir="rtl">
       {goalNotif && <GoalNotification {...goalNotif} onClose={() => setGoalNotif(null)} />}
       <TeamsModal isOpen={showTeamsModal} onClose={() => setShowTeamsModal(false)} getArabicName={getArabicName} />
       <FeaturesPanel isOpen={showFeaturesPanel} onClose={() => setShowFeaturesPanel(false)}
