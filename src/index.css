@@ -1,15 +1,29 @@
 @import "tailwindcss";
 
-/* ===== MOBILE FIX: prevent layout shift & flickering ===== */
-html, body {
+/* ===== MOBILE FIX: prevent layout shift, flickering & scroll bounce ===== */
+html {
   margin: 0;
   padding: 0;
-  min-height: 100%;
+  background-color: #050510;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeSpeed;
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  padding: 0;
   min-height: 100dvh;
+  min-height: -webkit-fill-available;
   background-color: #050510;
   color: white;
   font-family: 'Cairo', sans-serif;
   overflow-x: hidden;
+  position: relative;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -17,9 +31,10 @@ html, body {
 }
 
 #root {
-  min-height: 100vh;
   min-height: 100dvh;
+  min-height: -webkit-fill-available;
   isolation: isolate;
+  contain: content;
 }
 
 /* ===== Fix images not loading / broken on mobile ===== */
@@ -38,6 +53,20 @@ img {
   animation: marquee 35s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
+  contain: layout;
+}
+
+/* Mobile marquee - smoother, less jank */
+@media (max-width: 768px) {
+  .animate-marquee {
+    animation-duration: 45s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
 }
 
 /* ===== Scrollbar ===== */
@@ -48,21 +77,22 @@ img {
 .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 4px; }
 
-/* ===== MOBILE: disable expensive stuff ===== */
+/* ===== Mobile performance: prevent layout thrashing ===== */
 @media (max-width: 768px) {
-  .animate-marquee {
-    animation-duration: 20s;
+  * {
+    -webkit-overflow-scrolling: touch;
   }
   
-  /* Prevent text from being too small on mobile */
-  html {
-    font-size: 16px;
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  /* GPU acceleration for smoother rendering */
+  .gpu-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 }
 
-/* ===== Reduced motion ===== */
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
-    animation: none;
-  }
-}
+

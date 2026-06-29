@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CountdownProps {
   targetDate: string;
@@ -6,6 +6,7 @@ interface CountdownProps {
 
 export default function Countdown({ targetDate }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState('');
+  const timerRef = useRef<ReturnType<typeof setInterval>>();
 
   useEffect(() => {
     const calc = () => {
@@ -24,8 +25,9 @@ export default function Countdown({ targetDate }: CountdownProps) {
       }
     };
     calc();
-    const id = setInterval(calc, 1000);
-    return () => clearInterval(id);
+    const interval = diffInHours(targetDate) > 24 ? 60000 : 1000;
+    timerRef.current = setInterval(calc, interval);
+    return () => clearInterval(timerRef.current);
   }, [targetDate]);
 
   return (
@@ -33,4 +35,8 @@ export default function Countdown({ targetDate }: CountdownProps) {
       {timeLeft}
     </span>
   );
+}
+
+function diffInHours(date: string): number {
+  return (new Date(date).getTime() - Date.now()) / 3600000;
 }

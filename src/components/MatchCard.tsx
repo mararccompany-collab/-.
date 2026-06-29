@@ -48,7 +48,7 @@ export default function MatchCard({ match, onSelect, isSelected, getArabicName }
         {/* Teams */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
-            <img src={match.homeLogo} alt="" className="w-5 h-5 shrink-0" crossOrigin="anonymous" />
+            <img src={match.homeLogo} alt="" className="w-5 h-5 shrink-0" />
             <span className="text-white text-[11px] font-bold truncate" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.homeTeam)}</span>
           </div>
           <div className="px-2 shrink-0">
@@ -62,7 +62,7 @@ export default function MatchCard({ match, onSelect, isSelected, getArabicName }
           </div>
           <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
             <span className="text-white text-[11px] font-bold truncate" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
-            <img src={match.awayLogo} alt="" className="w-5 h-5 shrink-0" crossOrigin="anonymous" />
+            <img src={match.awayLogo} alt="" className="w-5 h-5 shrink-0" />
           </div>
         </div>
 

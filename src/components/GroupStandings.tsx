@@ -116,7 +116,7 @@ export default function GroupStandings() {
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-1.5">
                     {group.teams.slice(0, 4).map(t => (
-                      <img key={t.name} src={t.logo} alt="" className="w-4 h-4 rounded-full border border-[#0d0d2e]" crossOrigin="anonymous" />
+                      <img key={t.name} src={t.logo} alt="" className="w-4 h-4 rounded-full border border-[#0d0d2e]" />
                     ))}
                   </div>
                   {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-white/40" /> : <ChevronDown className="w-3.5 h-3.5 text-white/40" />}
@@ -153,7 +153,7 @@ export default function GroupStandings() {
                             <td className="py-1.5 px-1 text-white/50 font-bold">{idx + 1}</td>
                             <td className="py-1.5 px-1">
                               <div className="flex items-center gap-1">
-                                <img src={team.logo} alt="" className="w-4 h-4 rounded-full" crossOrigin="anonymous" />
+                                <img src={team.logo} alt="" className="w-4 h-4 rounded-full" />
                                 <span className={`font-bold truncate max-w-[60px] ${isHighlight ? 'text-green-400' : 'text-white/80'}`} style={{ fontFamily: 'Cairo, sans-serif' }}>
                                   {teamNameAr[team.name] || team.name}
                                 </span>
