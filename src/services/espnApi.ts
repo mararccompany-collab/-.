@@ -1,4 +1,6 @@
 const ESPN_BASE = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world';
+const STANDINGS_BASE = 'https://site.api.espn.com/apis/v2/sports/soccer/fifa.world';
+const CORS_PROXY = 'https://corsproxy.io/?';
 
 export interface MatchEvent {
   type: string;
@@ -134,17 +136,33 @@ function processMatch(event: any): ProcessedMatch {
   };
 }
 
+async function apiFetch(url: string): Promise<any> {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('API error');
+    return await r.json();
+  } catch {
+    try {
+      const r = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
+      if (!r.ok) throw new Error('Proxy error');
+      return await r.json();
+    } catch {
+      throw new Error('Network unavailable');
+    }
+  }
+}
+
 export async function fetchTodayMatches(): Promise<ProcessedMatch[]> {
   try {
-    const r = await fetch(`${ESPN_BASE}/scoreboard`);
-    return ((await r.json()).events || []).map(processMatch);
+    const data = await apiFetch(`${ESPN_BASE}/scoreboard`);
+    return (data.events || []).map(processMatch);
   } catch { return []; }
 }
 
 export async function fetchMatchesByDate(date: string): Promise<ProcessedMatch[]> {
   try {
-    const r = await fetch(`${ESPN_BASE}/scoreboard?dates=${date}`);
-    return ((await r.json()).events || []).map(processMatch);
+    const data = await apiFetch(`${ESPN_BASE}/scoreboard?dates=${date}`);
+    return (data.events || []).map(processMatch);
   } catch { return []; }
 }
 
@@ -162,8 +180,7 @@ function getStat(stats: any[], name: string): number {
 
 export async function fetchAllGroupStandings(): Promise<GroupStanding[]> {
   try {
-    const r = await fetch('https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings');
-    const data = await r.json();
+    const data = await apiFetch(`${STANDINGS_BASE}/standings`);
     return (data.children || []).map((child: any) => {
       const teams = (child.standings?.entries || []).map((e: any) => ({
         name: e.team?.displayName || '',

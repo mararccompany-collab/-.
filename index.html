@@ -13,13 +13,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
-      /* Critical CSS - prevents white flash on mobile */
-      html, body { margin:0; padding:0; background:#050510; color:#fff; }
+      html, body { margin:0; padding:0; background:#050510; color:#fff; font-family:sans-serif; }
       #root { min-height:100vh; min-height:100dvh; }
+      .preloader { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100dvh; text-align:center; padding:20px; }
+      .preloader span { font-size:48px; margin-bottom:16px; }
+      .preloader p { color:rgba(255,255,255,0.5); font-size:14px; margin:4px 0; }
+      .preloader .spinner { width:32px; height:32px; border:3px solid rgba(34,197,94,0.3); border-top-color:#22c55e; border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:16px; }
+      @keyframes spin { to { transform:rotate(360deg); } }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="preloader"><div class="spinner"></div><span>⚽</span><p>العرباوية ماتش</p><p style="font-size:12px">جاري التحميل...</p></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
