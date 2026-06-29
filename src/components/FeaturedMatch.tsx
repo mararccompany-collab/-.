@@ -107,12 +107,15 @@ export default function FeaturedMatch({ match, getArabicName }: FeaturedMatchPro
           <span className="bg-black/50 backdrop-blur text-white text-[10px] px-2.5 py-1.5 rounded-full border border-white/20">📺 beIN Sports</span>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-14 pt-6 pb-2">
-          <div className="flex flex-col items-center gap-2 min-w-[80px] flex-1 basis-[80px]">
-            <img src={match.homeLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl"/>
-            <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.homeTeam)}</span>
+        <div className="pt-6 pb-2" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '8px', alignItems: 'center', justifyItems: 'center' }}>
+          {/* Home team */}
+          <div className="flex flex-col items-center gap-2" style={{ maxWidth: 120 }}>
+            <img src={match.homeLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl" style={{ maxWidth: '100%', height: 'auto' }}/>
+            <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo', wordBreak: 'break-word' }}>{getArabicName(match.homeTeam)}</span>
           </div>
-          <div className="flex flex-col items-center gap-1.5 shrink-0 order-first md:order-none w-full md:w-auto mb-2 md:mb-0">
+
+          {/* Score/Status - spans 1 column */}
+          <div className="flex flex-col items-center gap-1.5">
             {isLive && <div className="bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full">🔴 {match.clock}</div>}
             {match.status === 'upcoming' && (
               <div className="bg-blue-600/80 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1">
@@ -126,15 +129,22 @@ export default function FeaturedMatch({ match, getArabicName }: FeaturedMatchPro
                 <span className="text-2xl md:text-6xl font-black text-white" style={{ fontFamily: 'Orbitron' }}>{match.awayScore}</span>
               </div>
             </div>
-            <span className="text-green-300 text-[10px] font-bold">{match.group}</span>
+            {match.status !== 'live' && <span className="text-green-300 text-[10px] font-bold">{match.group}</span>}
             {match.venue && <div className="flex items-center gap-1 text-white/50 text-[9px]"><MapPin className="w-2.5 h-2.5"/><span>{match.venue}</span></div>}
             {match.attendance > 0 && <span className="text-white/30 text-[8px]">👥 {match.attendance.toLocaleString('ar-EG')} متفرج</span>}
           </div>
-          <div className="flex flex-col items-center gap-2 min-w-[80px] flex-1 basis-[80px]">
-            <img src={match.awayLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl"/>
-            <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
+
+          {/* Away team */}
+          <div className="flex flex-col items-center gap-2" style={{ maxWidth: 120 }}>
+            <img src={match.awayLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl" style={{ maxWidth: '100%', height: 'auto' }}/>
+            <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo', wordBreak: 'break-word' }}>{getArabicName(match.awayTeam)}</span>
             {match.awayRecord && <span className="text-white/25 text-[8px]">{match.awayRecord}</span>}
           </div>
+
+          {/* Group name spans full width on mobile */}
+          {match.status === 'live' && (
+            <span className="text-green-300 text-[10px] font-bold col-span-3">{match.group}</span>
+          )}
         </div>
 
         {/* Form bar */}

@@ -9,15 +9,15 @@ export default function Ticker({ matches, getArabicName }: TickerProps) {
   if (matches.length === 0) return null;
 
   return (
-    <div className="bg-[#0a0a2e] border-b border-white/5 overflow-hidden">
-      <div className="flex items-center">
-        <div className="bg-red-600 text-white text-[10px] font-bold px-2.5 py-1.5 flex items-center gap-1 shrink-0 z-10">
+    <div className="bg-[#0a0a2e] border-b border-white/5 overflow-hidden" style={{ height: 32 }}>
+      <div className="flex items-center h-full">
+        <div className="bg-red-600 text-white text-[10px] font-bold px-2.5 h-full flex items-center gap-1 shrink-0 z-10 relative">
           <span className="w-1.5 h-1.5 bg-white rounded-full" />
           <span style={{ fontFamily: 'Cairo' }}>كأس العالم</span>
         </div>
-        <div className="overflow-hidden flex-1">
-          <div className="animate-marquee whitespace-nowrap py-1.5 flex items-center gap-5">
-            {[...matches, ...matches].map((match, i) => (
+        <div className="overflow-hidden flex-1 h-full relative">
+          <div className="animate-marquee absolute top-0 left-0 h-full flex items-center gap-5 whitespace-nowrap pl-3">
+            {matches.map((match, i) => (
               <span key={i} className="inline-flex items-center gap-1.5 text-xs text-white/70">
                 <img src={match.homeLogo} alt="" className="w-3.5 h-3.5" />
                 <span className="font-semibold text-white text-[11px]">{getArabicName(match.homeTeam)}</span>
