@@ -107,32 +107,32 @@ export default function FeaturedMatch({ match, getArabicName }: FeaturedMatchPro
           <span className="bg-black/50 backdrop-blur text-white text-[10px] px-2.5 py-1.5 rounded-full border border-white/20">📺 beIN Sports</span>
         </div>
 
-        <div className="relative flex items-center justify-center gap-4 md:gap-14 pt-6 pb-2">
-          <div className="flex flex-col items-center gap-2 flex-1">
-            <img src={match.homeLogo} alt="" className="w-14 h-14 md:w-20 md:h-20 drop-shadow-2xl"/>
-            <span className="text-white text-sm md:text-lg font-black text-center" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.homeTeam)}</span>
+        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-14 pt-6 pb-2">
+          <div className="flex flex-col items-center gap-2 min-w-[80px] flex-1 basis-[80px]">
+            <img src={match.homeLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl"/>
+            <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.homeTeam)}</span>
           </div>
-          <div className="flex flex-col items-center gap-1.5 shrink-0">
+          <div className="flex flex-col items-center gap-1.5 shrink-0 order-first md:order-none w-full md:w-auto mb-2 md:mb-0">
             {isLive && <div className="bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full">🔴 {match.clock}</div>}
             {match.status === 'upcoming' && (
               <div className="bg-blue-600/80 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1">
                 ⏰ تبدأ خلال <Countdown targetDate={match.date} />
               </div>
             )}
-            <div className="bg-black/40 rounded-2xl px-5 py-3 border border-white/20">
-              <div className="flex items-center gap-3">
-                <span className="text-4xl md:text-6xl font-black text-white" style={{ fontFamily: 'Orbitron' }}>{match.homeScore}</span>
-                <span className="text-xl md:text-3xl text-green-400 font-bold">:</span>
-                <span className="text-4xl md:text-6xl font-black text-white" style={{ fontFamily: 'Orbitron' }}>{match.awayScore}</span>
+            <div className="bg-black/40 rounded-2xl px-3 py-2 md:px-5 md:py-3 border border-white/20">
+              <div className="flex items-center gap-2 md:gap-3">
+                <span className="text-2xl md:text-6xl font-black text-white" style={{ fontFamily: 'Orbitron' }}>{match.homeScore}</span>
+                <span className="text-lg md:text-3xl text-green-400 font-bold">:</span>
+                <span className="text-2xl md:text-6xl font-black text-white" style={{ fontFamily: 'Orbitron' }}>{match.awayScore}</span>
               </div>
             </div>
             <span className="text-green-300 text-[10px] font-bold">{match.group}</span>
             {match.venue && <div className="flex items-center gap-1 text-white/50 text-[9px]"><MapPin className="w-2.5 h-2.5"/><span>{match.venue}</span></div>}
             {match.attendance > 0 && <span className="text-white/30 text-[8px]">👥 {match.attendance.toLocaleString('ar-EG')} متفرج</span>}
           </div>
-          <div className="flex flex-col items-center gap-2 flex-1">
-            <img src={match.awayLogo} alt="" className="w-14 h-14 md:w-20 md:h-20 drop-shadow-2xl"/>
-            <span className="text-white text-sm md:text-lg font-black text-center" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
+          <div className="flex flex-col items-center gap-2 min-w-[80px] flex-1 basis-[80px]">
+            <img src={match.awayLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl"/>
+            <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
             {match.awayRecord && <span className="text-white/25 text-[8px]">{match.awayRecord}</span>}
           </div>
         </div>
