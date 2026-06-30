@@ -8,6 +8,10 @@ import FeaturesPanel from './components/FeaturesPanel';
 import AnalysesPage from './components/AnalysesPage';
 import Ticker from './components/Ticker';
 import GroupStandings from './components/GroupStandings';
+import PastWinners from './components/PastWinners';
+import TeamFormation from './components/TeamFormation';
+import AllTeamsPage from './components/AllTeamsPage';
+import WorldCupTimeline from './components/WorldCupTimeline';
 import { fetchTodayMatches, type ProcessedMatch } from './services/espnApi';
 
 const teamNameAr: Record<string, string> = {
@@ -53,6 +57,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<AppSettings>({ showPredictions: true, showLiveOnly: false });
+  const [page, setPage] = useState<'home' | 'timeline' | 'teams' | 'formations' | 'winners'>('home');
 
   useEffect(() => {
     const stored = localStorage.getItem('app_settings');
@@ -122,93 +127,147 @@ export default function App() {
       <main className="container mx-auto px-4 py-6 space-y-6">
         <Ticker matches={matches} getArabicName={getArabicName} />
 
-        <div className="grid gap-4 lg:grid-cols-[1fr_260px]">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h2 className="text-base font-semibold">مواعيد المباريات</h2>
-                <p className="text-sm text-white/50">أقرب المباريات القادمة وحالة المباريات اليوم.</p>
-              </div>
-              <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-300">{liveMatchesCount} مباشر</span>
-            </div>
-
-            {upcomingMatches.length > 0 ? (
-              <div className="mt-4 space-y-3">
-                {upcomingMatches.map((match) => (
-                  <div key={match.id} className="rounded-2xl border border-white/10 bg-[#081020] p-3">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="text-[11px] text-white/60">{new Date(match.date).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>
-                      <div className="text-sm font-semibold text-white">{getArabicName(match.homeTeam)} vs {getArabicName(match.awayTeam)}</div>
-                    </div>
-                    <div className="mt-1 text-[10px] text-white/40">{match.group || 'كأس العالم'} • {match.venue || 'الملعب غير معروف'}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-4 text-sm text-white/50">لا توجد مباريات قادمة في القائمة.</div>
-            )}
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-            <h2 className="text-base font-semibold">كل المميزات</h2>
-            <ul className="mt-4 space-y-2 text-sm text-white/60">
-              <li>⚽ ترتيب المجموعات مباشر</li>
-              <li>📺 مواقع البث المباشر الشائعة</li>
-              <li>📰 شريط الأخبار للمباريات</li>
-              <li>🧠 تحليلات الأهداف والبطاقات</li>
-              <li>⏱️ مواعيد بداية المباريات</li>
-            </ul>
-          </div>
+        {/* Navigation tabs */}
+        <div className="flex flex-wrap gap-1.5 p-1 bg-white/[0.03] rounded-2xl border border-white/5">
+          {[
+            { key: 'home', label: 'الرئيسية', icon: '🏠' },
+            { key: 'timeline', label: 'الجدول', icon: '📅' },
+            { key: 'teams', label: 'المنتخبات', icon: '🏳️' },
+            { key: 'formations', label: 'التشكيلات', icon: '🧑‍🤝‍🧑' },
+            { key: 'winners', label: 'السجلات', icon: '🏆' },
+          ].map(tab => (
+            <button key={tab.key}
+              onClick={() => setPage(tab.key as typeof page)}
+              className={`flex-1 min-w-[60px] px-3 py-2 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${
+                page === tab.key
+                  ? 'bg-green-500/15 text-green-400 border border-green-500/30 shadow-lg shadow-green-500/5'
+                  : 'text-white/40 hover:text-white/70 hover:bg-white/5 border border-transparent'
+              }`}
+              style={{ fontFamily: 'Cairo' }}
+            >
+              <span className="block text-sm mb-0.5">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-          <section className="space-y-4">
+        {page === 'home' && (<>
+          <div className="grid gap-4 lg:grid-cols-[1fr_260px]">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-              <h2 className="text-lg font-semibold">مباريات اليوم</h2>
-              <p className="mt-2 text-sm text-white/60">اختر مباراة لعرض التفاصيل والتحليل الفوري.</p>
-            </div>
-            {loading ? (
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center text-white/70">جاري التحميل...</div>
-            ) : error ? (
-              <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-6 text-center text-red-100">{error}</div>
-            ) : matches.length === 0 ? (
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center text-white/60">لا توجد مباريات متاحة حاليا.</div>
-            ) : (
-              <div className="space-y-3">
-                {matches.map((match) => (
-                  <MatchCard
-                    key={match.id}
-                    match={match}
-                    isSelected={selectedMatch?.id === match.id}
-                    onSelect={setSelectedMatch}
-                    getArabicName={getArabicName}
-                  />
-                ))}
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-base font-semibold">مواعيد المباريات</h2>
+                  <p className="text-sm text-white/50">أقرب المباريات القادمة وحالة المباريات اليوم.</p>
+                </div>
+                <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-300">{liveMatchesCount} مباشر</span>
               </div>
-            )}
 
-            <div className="mt-4 space-y-4">
-              <TopScorers />
-              <GroupStandings />
-            </div>
-          </section>
-
-          <section className="space-y-4">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-              {selectedMatch ? (
-                <MatchDetails match={selectedMatch} getArabicName={getArabicName} settings={settings} />
+              {upcomingMatches.length > 0 ? (
+                <div className="mt-4 space-y-3">
+                  {upcomingMatches.map((match) => (
+                    <div key={match.id} className="rounded-2xl border border-white/10 bg-[#081020] p-3">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="text-[11px] text-white/60">{new Date(match.date).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>
+                        <div className="text-sm font-semibold text-white">{getArabicName(match.homeTeam)} vs {getArabicName(match.awayTeam)}</div>
+                      </div>
+                      <div className="mt-1 text-[10px] text-white/40">{match.group || 'كأس العالم'} • {match.venue || 'الملعب غير معروف'}</div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <div className="py-20 text-center text-white/60">اختر مباراة من القائمة لعرض التفاصيل.</div>
+                <div className="mt-4 text-sm text-white/50">لا توجد مباريات قادمة في القائمة.</div>
               )}
             </div>
 
-            {selectedMatch && (
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+              <h2 className="text-base font-semibold">كل المميزات</h2>
+              <ul className="mt-4 space-y-2 text-sm text-white/60">
+                <li>⚽ ترتيب المجموعات مباشر</li>
+                <li>📺 مواقع البث المباشر الشائعة</li>
+                <li>📰 شريط الأخبار للمباريات</li>
+                <li>🧠 تحليلات الأهداف والبطاقات</li>
+                <li>⏱️ مواعيد بداية المباريات</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+            <section className="space-y-4">
               <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-                <FeaturedMatch match={selectedMatch} getArabicName={getArabicName} settings={settings} />
+                <h2 className="text-lg font-semibold">مباريات اليوم</h2>
+                <p className="mt-2 text-sm text-white/60">اختر مباراة لعرض التفاصيل والتحليل الفوري.</p>
               </div>
-            )}
-          </section>
-        </div>
+              {loading ? (
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center text-white/70">جاري التحميل...</div>
+              ) : error ? (
+                <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-6 text-center text-red-100">{error}</div>
+              ) : matches.length === 0 ? (
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center text-white/60">لا توجد مباريات متاحة حاليا.</div>
+              ) : (
+                <div className="space-y-3">
+                  {matches.map((match) => (
+                    <MatchCard
+                      key={match.id}
+                      match={match}
+                      isSelected={selectedMatch?.id === match.id}
+                      onSelect={setSelectedMatch}
+                      getArabicName={getArabicName}
+                    />
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-4 space-y-4">
+                <TopScorers />
+                <GroupStandings />
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                {selectedMatch ? (
+                  <MatchDetails match={selectedMatch} getArabicName={getArabicName} settings={settings} />
+                ) : (
+                  <div className="py-20 text-center text-white/60">اختر مباراة من القائمة لعرض التفاصيل.</div>
+                )}
+              </div>
+
+              {selectedMatch && (
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                  <FeaturedMatch match={selectedMatch} getArabicName={getArabicName} settings={settings} />
+                </div>
+              )}
+            </section>
+          </div>
+        </>)}
+
+        {page === 'timeline' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>📅 الجدول الزمني لكأس العالم</h2>
+            <WorldCupTimeline matches={matches} getArabicName={getArabicName} />
+          </div>
+        )}
+
+        {page === 'teams' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>🏳️ جميع المنتخبات المشاركة</h2>
+            <AllTeamsPage />
+          </div>
+        )}
+
+        {page === 'formations' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>🧑‍🤝‍🧑 تشكيلات الفرق والخطط</h2>
+            <TeamFormation />
+          </div>
+        )}
+
+        {page === 'winners' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>🏆 سجل الفائزين بكأس العالم</h2>
+            <PastWinners />
+          </div>
+        )}
       </main>
       <FeaturesPanel isOpen={showSettings} onClose={() => setShowSettings(false)} settings={settings} onChange={handleSettingsChange} />
     </div>
