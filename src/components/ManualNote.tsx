@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import { sanitize } from '../utils/sanitize';
 
 interface ManualNoteProps { matchId: string }
 
@@ -62,7 +62,7 @@ export default function ManualNote({ matchId }: ManualNoteProps) {
 
       <div className="mt-3">
         <div className="text-white/60 text-sm mb-1">معاينة (عرض Markdown)</div>
-        <div className="p-3 bg-black/20 rounded-md text-white text-sm" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parse(text || '')) }} />
+        <div className="p-3 bg-black/20 rounded-md text-white text-sm" dangerouslySetInnerHTML={{ __html: sanitize(marked.parse(text || '')) }} />
       </div>
     </div>
   );

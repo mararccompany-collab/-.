@@ -1,3 +1,5 @@
+import logoUrl from '../assets/logo.svg';
+
 interface HeaderProps { onOpenAnalyses?: () => void }
 
 export default function Header({ onOpenAnalyses }: HeaderProps) {
@@ -6,9 +8,7 @@ export default function Header({ onOpenAnalyses }: HeaderProps) {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg text-xl">
-              ⚽
-            </div>
+            <img src={logoUrl} alt="logo" className="w-10 h-10 rounded-xl shadow-lg object-cover" />
             <div>
               <h1 className="text-lg md:text-2xl font-black text-white leading-tight" style={{ fontFamily: 'Cairo, sans-serif' }}>
                 العرباوية<span className="text-green-400"> ماتش</span>
