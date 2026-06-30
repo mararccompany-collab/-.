@@ -489,6 +489,50 @@ playersByTeam['south-korea'] = [
   p(11, 'Hwang Hee-chan', 'هوانغ هي-تشان', 80, 40, 'RW', 'جناح أيمن'),
 ];
 
+// === Arab Teams (historical participants) ===
+playersByTeam['egypt'] = [
+  p(1, 'Mohamed El-Shenawy', 'محمد الشناوي', 50, 92, 'GK', 'حارس'),
+  p(2, 'Mohamed Hany', 'محمد هاني', 15, 78, 'RB', 'ظهير أيمن'),
+  p(3, 'Ahmed Fathy', 'أحمد فتحي', 85, 78, 'LB', 'ظهير أيسر'),
+  p(4, 'Mahmoud Alaa', 'محمود علاء', 35, 72, 'CB', 'مدافع'),
+  p(5, 'Ahmed Hegazy', 'أحمد حجازي', 65, 72, 'CB', 'مدافع'),
+  p(6, 'Tarek Hamed', 'طارق حامد', 35, 55, 'CDM', 'وسط دفاعي'),
+  p(7, 'Mohamed Elneny', 'محمد النني', 55, 55, 'CM', 'وسط'),
+  p(8, 'Abdallah El-Said', 'عبدالله السعيد', 55, 42, 'CAM', 'وسط هجومي'),
+  p(9, 'Mohamed Salah', 'محمد صلاح', 80, 40, 'RW', 'جناح أيمن'),
+  p(10, 'Mostafa Mohamed', 'مصطفى محمد', 50, 30, 'ST', 'مهاجم'),
+  p(11, 'Mahmoud Trezeguet', 'محمود تريزيجيه', 20, 40, 'LW', 'جناح أيسر'),
+];
+
+playersByTeam['algeria'] = [
+  p(1, 'Raïs M\'Bolhi', 'رايس مبولحي', 50, 92, 'GK', 'حارس'),
+  p(2, 'Youcef Atal', 'يوسف عطال', 15, 78, 'RB', 'ظهير أيمن'),
+  p(3, 'Ramy Bensebaini', 'رامي بن سبعيني', 85, 78, 'LB', 'ظهير أيسر'),
+  p(4, 'Aïssa Mandi', 'عيسى ماندي', 50, 72, 'CB', 'مدافع'),
+  p(5, 'Djamel Benlamri', 'جمال بن العمري', 35, 72, 'CB', 'مدافع'),
+  p(6, 'Adlène Guedioura', 'عدلان قديورة', 35, 55, 'CDM', 'وسط دفاعي'),
+  p(7, 'Ismaël Bennacer', 'إسماعيل بن ناصر', 55, 55, 'CM', 'وسط'),
+  p(8, 'Riyad Mahrez', 'رياض محرز', 20, 40, 'RW', 'جناح أيمن'),
+  p(9, 'Islam Slimani', 'إسلام سليماني', 50, 30, 'ST', 'مهاجم'),
+  p(10, 'Baghdad Bounedjah', 'بغداد بونجاح', 75, 30, 'ST', 'مهاجم'),
+  p(11, 'Sofiane Feghouli', 'سفيان فيغولي', 80, 40, 'LW', 'جناح أيسر'),
+];
+
+playersByTeam['iraq'] = [
+  p(1, 'Jalal Hassan', 'جلال حسن', 50, 92, 'GK', 'حارس'),
+  p(2, 'Ahmed Ibrahim', 'أحمد إبراهيم', 35, 72, 'CB', 'مدافع'),
+  p(3, 'Ali Adnan', 'علي عدنان', 85, 78, 'LB', 'ظهير أيسر'),
+  p(4, 'Rebin Sulaka', 'ريبين سولاقا', 65, 72, 'CB', 'مدافع'),
+  p(5, 'Mohannad Ali', 'مهند علي', 15, 78, 'RB', 'ظهير أيمن'),
+  p(6, 'Amjad Attwan', 'أمجد عطوان', 55, 55, 'CM', 'وسط'),
+  p(7, 'Safaa Hadi', 'صفاء هادي', 35, 55, 'CDM', 'وسط دفاعي'),
+  p(8, 'Ibrahim Bayesh', 'إبراهيم بايش', 55, 42, 'CAM', 'وسط هجومي'),
+  p(9, 'Aymen Hussein', 'أيمن حسين', 50, 30, 'ST', 'مهاجم'),
+  p(10, 'Alaa Abbas', 'آلاء عباس', 75, 30, 'ST', 'مهاجم'),
+  p(11, 'Bashar Resan', 'بشار رسن', 80, 40, 'LW', 'جناح أيسر'),
+];
+
+// === World Cup 2022 Qualifiers ===
 export const allTeams: TeamData[] = [
   // Group A
   { id: 'qatar', name: 'Qatar', nameAr: 'قطر', flag: '🇶🇦', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/5037.png', group: 'A', groupAr: 'أ', formation: '5-3-2', players: playersByTeam['qatar'], keyPlayers: ['Akram Afif', 'Almoez Ali', 'Hassan Al-Haydos'], keyPlayersAr: ['أكرم عفيف', 'المعز علي', 'حسن الهيدوس'], fifaRank: 50, worldCups: 0, coach: 'Félix Sánchez', coachAr: 'فيليكس سانشيز' },
@@ -530,6 +574,10 @@ export const allTeams: TeamData[] = [
   { id: 'ghana', name: 'Ghana', nameAr: 'غانا', flag: '🇬🇭', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/5353.png', group: 'H', groupAr: 'ح', formation: '4-4-2', players: playersByTeam['ghana'], keyPlayers: ['Thomas Partey', 'Mohammed Kudus', 'André Ayew'], keyPlayersAr: ['توماس بارتي', 'محمد قدوس', 'أندري أيو'], fifaRank: 61, worldCups: 0, coach: 'Otto Addo', coachAr: 'أوتو أدو' },
   { id: 'uruguay', name: 'Uruguay', nameAr: 'الأوروغواي', flag: '🇺🇾', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/5318.png', group: 'H', groupAr: 'ح', formation: '4-4-2', players: playersByTeam['uruguay'], keyPlayers: ['Federico Valverde', 'Darwin Núñez', 'Luis Suárez'], keyPlayersAr: ['فيديريكو فالفيردي', 'داروين نونيز', 'لويس سواريز'], fifaRank: 14, worldCups: 2, coach: 'Diego Alonso', coachAr: 'دييغو ألونسو' },
   { id: 'south-korea', name: 'South Korea', nameAr: 'كوريا الجنوبية', flag: '🇰🇷', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/6721.png', group: 'H', groupAr: 'ح', formation: '4-4-2', players: playersByTeam['south-korea'], keyPlayers: ['Heung-min Son', 'Kim Min-jae', 'Hwang Hee-chan'], keyPlayersAr: ['سون هيونغ-مين', 'كيم مين-جاي', 'هوانغ هي-تشان'], fifaRank: 28, worldCups: 0, coach: 'Paulo Bento', coachAr: 'باولو بينتو' },
+  // Arab teams (historical)
+  { id: 'egypt', name: 'Egypt', nameAr: 'مصر', flag: '🇪🇬', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/6574.png', group: '—', groupAr: '—', formation: '4-3-3', players: playersByTeam['egypt'], keyPlayers: ['Mohamed Salah', 'Mohamed Elneny', 'Ahmed Hegazy'], keyPlayersAr: ['محمد صلاح', 'محمد النني', 'أحمد حجازي'], fifaRank: 34, worldCups: 3, coach: 'Rui Vitória', coachAr: 'روي فيتوريا' },
+  { id: 'algeria', name: 'Algeria', nameAr: 'الجزائر', flag: '🇩🇿', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/5017.png', group: '—', groupAr: '—', formation: '4-3-3', players: playersByTeam['algeria'], keyPlayers: ['Riyad Mahrez', 'Ismaël Bennacer', 'Islam Slimani'], keyPlayersAr: ['رياض محرز', 'إسماعيل بن ناصر', 'إسلام سليماني'], fifaRank: 31, worldCups: 4, coach: 'Djamel Belmadi', coachAr: 'جمال بلماضي' },
+  { id: 'iraq', name: 'Iraq', nameAr: 'العراق', flag: '🇮🇶', logo: 'https://a1.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/6605.png', group: '—', groupAr: '—', formation: '4-2-3-1', players: playersByTeam['iraq'], keyPlayers: ['Mohannad Ali', 'Ali Adnan', 'Jalal Hassan'], keyPlayersAr: ['مهند علي', 'علي عدنان', 'جلال حسن'], fifaRank: 67, worldCups: 1, coach: 'Jesús Casas', coachAr: 'خيسوس كاساس' },
 ];
 
 export function getTeamById(id: string): TeamData | undefined {
