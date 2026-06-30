@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/Header';
 import MatchCard from './components/MatchCard';
 import MatchDetails from './components/MatchDetails';
@@ -146,6 +147,7 @@ export default function App() {
           <AnalysesPage matches={matches} getArabicName={getArabicName} />
         </main>
         <FeaturesPanel isOpen={showSettings} onClose={() => setShowSettings(false)} settings={settings} onChange={handleSettingsChange} />
+        <SpeedInsights />
       </div>
     );
   }
@@ -363,6 +365,7 @@ export default function App() {
         )}
       </main>
       <FeaturesPanel isOpen={showSettings} onClose={() => setShowSettings(false)} settings={settings} onChange={handleSettingsChange} />
+      <SpeedInsights />
     </div>
   );
 }
