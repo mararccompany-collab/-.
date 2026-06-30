@@ -1,37 +1,24 @@
-import logoUrl from '../assets/logo.svg';
+﻿import logoUrl from '../assets/logo.svg';
 
-interface HeaderProps { onOpenAnalyses?: () => void }
+interface HeaderProps {
+  onOpenAnalyses: () => void;
+  onOpenSettings: () => void;
+}
 
-export default function Header({ onOpenAnalyses }: HeaderProps) {
+export default function Header({ onOpenAnalyses, onOpenSettings }: HeaderProps) {
   return (
-    <header className="bg-[#0b1324] border-b border-white/10">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <img src={logoUrl} alt="logo" loading="lazy" decoding="async" className="w-10 h-10 rounded-xl shadow-lg object-cover" />
-            <div>
-              <h1 className="text-lg md:text-2xl font-black text-white leading-tight" style={{ fontFamily: 'Cairo, sans-serif' }}>
-                العرباوية<span className="text-green-400"> ماتش</span>
-              </h1>
-              <p className="text-[9px] text-green-300/60 font-semibold" style={{ fontFamily: 'Cairo, sans-serif' }}>
-                كأس العالم 2026 - نتائج مباشرة
-              </p>
-            </div>
+    <header className="bg-[#0b1220] border-b border-white/10 text-white">
+      <div className="container mx-auto flex flex-wrap items-center justify-between gap-4 px-4 py-4">
+        <div className="flex items-center gap-3">
+          <img src={logoUrl} alt="logo" className="h-11 w-11 rounded-xl bg-white/5 p-2" />
+          <div>
+            <h1 className="text-xl font-black">العرباوية ماتش</h1>
+            <p className="text-xs text-white/60">مواعيد المباريات والتحليلات المباشرة</p>
           </div>
-
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 bg-red-500/20 border border-red-500/40 rounded-full px-2.5 py-1">
-              <div className="w-2 h-2 bg-red-500 rounded-full" />
-              <span className="text-red-400 text-[10px] font-bold" style={{ fontFamily: 'Cairo' }}>مباشر</span>
-            </div>
-            <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-2.5 py-1">
-              <span className="text-sm">🏆</span>
-              <span className="text-white/60 text-[10px] font-bold hidden sm:inline" style={{ fontFamily: 'Cairo' }}>FIFA 2026</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => onOpenAnalyses?.()} className="text-white/60 bg-white/5 px-3 py-1 rounded-lg text-[12px]">🧠 تحليلات</button>
-          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button onClick={onOpenSettings} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white">الإعدادات</button>
+          <button onClick={onOpenAnalyses} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm text-white">التحليلات</button>
         </div>
       </div>
     </header>

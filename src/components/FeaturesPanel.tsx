@@ -1,244 +1,152 @@
-import { useState } from 'react';
-import { 
-  Bell, Star, Share2, 
-  Settings, X, Check, Volume2, VolumeX,
-  Smartphone, Globe, Trophy, Zap
-} from 'lucide-react';
-import { useState, useEffect } from 'react';
+﻿import { useEffect, useState } from 'react';
+import { Settings, X, Share2 } from 'lucide-react';
 import external from '../services/externalAnalytics';
-
-function AnalyticsConfigForm() {
-  const [xg, setXg] = useState('');
-  const [elo, setElo] = useState('');
-  const [opta, setOpta] = useState('');
-
-  useEffect(() => {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('ext_analytics') || '{}');
-      setXg(cfg.xgApi || ''); setElo(cfg.eloApi || ''); setOpta(cfg.optaApi || '');
-    } catch { }
-  }, []);
-
-  const save = () => {
-    external.saveConfig({ xgApi: xg || undefined, eloApi: elo || undefined, optaApi: opta || undefined });
-    alert('تم حفظ إعدادات التحليل الخارجي');
-  };
-
-  return (
-    <div className="space-y-2">
-      <input value={xg} onChange={e=>setXg(e.target.value)} placeholder="xG API endpoint (مثال: https://api.example.com/xg?match={matchId})" className="w-full p-2 bg-white/5 rounded-md text-white text-sm" />
-      <input value={elo} onChange={e=>setElo(e.target.value)} placeholder="Elo API endpoint (مثال: https://api.example.com/elo?team={team})" className="w-full p-2 bg-white/5 rounded-md text-white text-sm" />
-      <input value={opta} onChange={e=>setOpta(e.target.value)} placeholder="Opta API endpoint (مثال: https://api.example.com/opta?match={matchId})" className="w-full p-2 bg-white/5 rounded-md text-white text-sm" />
-      <div className="flex gap-2">
-        <button onClick={save} className="bg-green-500 px-3 py-1 rounded-md text-white">حفظ</button>
-        <button onClick={()=>{ setXg(''); setElo(''); setOpta(''); external.saveConfig({}); alert('تم المسح');}} className="bg-white/5 px-3 py-1 rounded-md text-white/60">مسح</button>
-      </div>
-    </div>
-  );
-}
 
 interface FeaturesPanelProps {
   isOpen: boolean;
   onClose: () => void;
   settings: {
-    notifications: boolean;
-    sound: boolean;
-    darkMode: boolean;
-    arabicNames: boolean;
+    showPredictions: boolean;
+    showLiveOnly: boolean;
   };
-  onSettingsChange: (key: string, value: boolean) => void;
-  favorites: string[];
-  onToggleFavorite: (matchId: string) => void;
+  onChange: (next: { showPredictions: boolean; showLiveOnly: boolean }) => void;
 }
 
-export default function FeaturesPanel({ 
-  isOpen, onClose, settings, onSettingsChange, favorites 
-}: FeaturesPanelProps) {
-  const [activeTab, setActiveTab] = useState<'settings' | 'features'>('features');
+interface AnalyticsConfig {
+  xgApi?: string;
+  eloApi?: string;
+  optaApi?: string;
+}
+
+export default function FeaturesPanel({ isOpen, onClose, settings, onChange }: FeaturesPanelProps) {
+  const [config, setConfig] = useState<AnalyticsConfig>({});
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('ext_analytics') || '{}');
+      setConfig({
+        xgApi: stored.xgApi || '',
+        eloApi: stored.eloApi || '',
+        optaApi: stored.optaApi || '',
+      });
+    } catch {
+      setConfig({});
+    }
+  }, []);
+
+  const updateConfig = (key: keyof AnalyticsConfig, value: string) => {
+    setConfig((current) => ({ ...current, [key]: value }));
+  };
+
+  const saveConfig = () => {
+    external.saveConfig({
+      xgApi: config.xgApi?.trim() || undefined,
+      eloApi: config.eloApi?.trim() || undefined,
+      optaApi: config.optaApi?.trim() || undefined,
+    });
+    alert('تم حفظ إعدادات التحليل الخارجي');
+  };
+
+  const clearConfig = () => {
+    setConfig({});
+    external.saveConfig({});
+    alert('تم مسح إعدادات التحليل الخارجي');
+  };
 
   if (!isOpen) return null;
-
-  const premiumFeatures = [
-    { icon: <Zap className="w-5 h-5 text-yellow-400" />, title: 'تحديث لحظي', desc: 'نتائج كل 30 ثانية', active: true },
-    { icon: <Trophy className="w-5 h-5 text-green-400" />, title: 'ترتيب المجموعات', desc: '12 مجموعة مباشرة', active: true },
-    { icon: <Globe className="w-5 h-5 text-blue-400" />, title: 'تغطية شاملة', desc: '48 منتخب', active: true },
-    { icon: <Bell className="w-5 h-5 text-red-400" />, title: 'إشعارات الأهداف', desc: 'تنبيه فوري', active: settings.notifications },
-    { icon: <Star className="w-5 h-5 text-yellow-400" />, title: 'المباريات المفضلة', desc: `${favorites.length} مباراة محفوظة`, active: favorites.length > 0 },
-    { icon: <Smartphone className="w-5 h-5 text-purple-400" />, title: 'تصميم متجاوب', desc: 'جوال وكمبيوتر', active: true },
-    { icon: <Globe className="w-5 h-5 text-blue-300" />, title: 'تحليلات المباريات', desc: 'توقعات ونصائح فنية', active: true },
-  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      
-      <div 
-        className="relative bg-gradient-to-br from-[#1a1a3e] to-[#0d0d2e] rounded-2xl w-full max-w-md border border-white/10 shadow-2xl overflow-hidden"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h2 className="text-white font-bold text-lg flex items-center gap-2" style={{ fontFamily: 'Cairo, sans-serif' }}>
+      <div className="relative z-10 w-full max-w-xl overflow-hidden rounded-3xl border border-white/10 bg-[#0b1220] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+          <div className="flex items-center gap-3">
             <Settings className="w-5 h-5 text-green-400" />
-            الإعدادات والمميزات
-          </h2>
-          <button onClick={onClose} className="text-white/50 hover:text-white cursor-pointer">
-            <X className="w-5 h-5" />
+            <div>
+              <h2 className="text-lg font-bold">الإعدادات</h2>
+              <p className="text-xs text-white/50">تحكم في العرض والمصادر الخارجية.</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="rounded-full bg-white/5 p-2 text-white/70 hover:text-white">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b border-white/10">
-          <button
-            onClick={() => setActiveTab('features')}
-            className={`flex-1 py-3 text-sm font-bold cursor-pointer transition-colors ${activeTab === 'features' ? 'text-green-400 border-b-2 border-green-400' : 'text-white/50'}`}
-            style={{ fontFamily: 'Cairo, sans-serif' }}
-          >
-            ⭐ المميزات
-          </button>
-          <button
-            onClick={() => setActiveTab('settings')}
-            className={`flex-1 py-3 text-sm font-bold cursor-pointer transition-colors ${activeTab === 'settings' ? 'text-green-400 border-b-2 border-green-400' : 'text-white/50'}`}
-            style={{ fontFamily: 'Cairo, sans-serif' }}
-          >
-            ⚙️ الإعدادات
-          </button>
-        </div>
+        <div className="space-y-4 px-5 py-5">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="flex cursor-pointer items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-4 py-4">
+              <div>
+                <p className="font-semibold">عرض المباريات المباشرة فقط</p>
+                <p className="text-xs text-white/50">يظهر المباريات الجارية فقط.</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={settings.showLiveOnly}
+                onChange={() => onChange({ ...settings, showLiveOnly: !settings.showLiveOnly })}
+                className="h-5 w-5 rounded-md border border-white/20 bg-slate-900 text-green-500"
+              />
+            </label>
 
-        {/* Content */}
-        <div className="p-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
-          {activeTab === 'features' && (
+            <label className="flex cursor-pointer items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-4 py-4">
+              <div>
+                <p className="font-semibold">عرض التنبؤات</p>
+                <p className="text-xs text-white/50">شغل أو أوقف تحليلات المباريات.</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={settings.showPredictions}
+                onChange={() => onChange({ ...settings, showPredictions: !settings.showPredictions })}
+                className="h-5 w-5 rounded-md border border-white/20 bg-slate-900 text-green-500"
+              />
+            </label>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h3 className="mb-3 text-sm font-semibold">مصادر التحليل الخارجي</h3>
             <div className="space-y-3">
-              {premiumFeatures.map((feature, i) => (
-                <div
-                  key={i}
-                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
-                    feature.active 
-                      ? 'bg-green-500/10 border-green-500/30' 
-                      : 'bg-white/5 border-white/10'
-                  }`}
-                >
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${feature.active ? 'bg-green-500/20' : 'bg-white/5'}`}>
-                    {feature.icon}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-white font-bold text-sm" style={{ fontFamily: 'Cairo, sans-serif' }}>{feature.title}</p>
-                    <p className="text-white/50 text-xs">{feature.desc}</p>
-                  </div>
-                  {feature.active ? (
-                    <Check className="w-5 h-5 text-green-400" />
-                  ) : (
-                    <span className="text-white/30 text-xs">غير مفعل</span>
-                  )}
-                </div>
-              ))}
+              <input
+                value={config.xgApi || ''}
+                onChange={(e) => updateConfig('xgApi', e.target.value)}
+                placeholder="نقطة نهاية xG API"
+                className="w-full rounded-2xl border border-white/10 bg-[#0f172a] px-4 py-3 text-sm text-white placeholder:text-white/40"
+              />
+              <input
+                value={config.eloApi || ''}
+                onChange={(e) => updateConfig('eloApi', e.target.value)}
+                placeholder="نقطة نهاية Elo API"
+                className="w-full rounded-2xl border border-white/10 bg-[#0f172a] px-4 py-3 text-sm text-white placeholder:text-white/40"
+              />
+              <input
+                value={config.optaApi || ''}
+                onChange={(e) => updateConfig('optaApi', e.target.value)}
+                placeholder="نقطة نهاية Opta API"
+                className="w-full rounded-2xl border border-white/10 bg-[#0f172a] px-4 py-3 text-sm text-white placeholder:text-white/40"
+              />
+              <div className="flex flex-wrap gap-3">
+                <button type="button" onClick={saveConfig} className="rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white">حفظ</button>
+                <button type="button" onClick={clearConfig} className="rounded-2xl border border-white/10 px-4 py-3 text-sm text-white/60">مسح</button>
+              </div>
             </div>
-          )}
+          </div>
 
-          {activeTab === 'settings' && (
-            <div className="space-y-4">
-              {/* Notifications */}
-              <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
-                <div className="flex items-center gap-3">
-                  <Bell className="w-5 h-5 text-red-400" />
-                  <div>
-                    <p className="text-white font-bold text-sm" style={{ fontFamily: 'Cairo, sans-serif' }}>إشعارات الأهداف</p>
-                    <p className="text-white/50 text-xs">تنبيه عند تسجيل هدف</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onSettingsChange('notifications', !settings.notifications)}
-                  className={`w-12 h-6 rounded-full transition-colors cursor-pointer ${settings.notifications ? 'bg-green-500' : 'bg-white/20'}`}
-                >
-                  <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.notifications ? 'translate-x-6' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Sound */}
-              <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
-                <div className="flex items-center gap-3">
-                  {settings.sound ? <Volume2 className="w-5 h-5 text-blue-400" /> : <VolumeX className="w-5 h-5 text-gray-400" />}
-                  <div>
-                    <p className="text-white font-bold text-sm" style={{ fontFamily: 'Cairo, sans-serif' }}>الصوت</p>
-                    <p className="text-white/50 text-xs">صوت عند الإشعارات</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onSettingsChange('sound', !settings.sound)}
-                  className={`w-12 h-6 rounded-full transition-colors cursor-pointer ${settings.sound ? 'bg-green-500' : 'bg-white/20'}`}
-                >
-                  <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.sound ? 'translate-x-6' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Arabic Names */}
-              <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
-                <div className="flex items-center gap-3">
-                  <Globe className="w-5 h-5 text-green-400" />
-                  <div>
-                    <p className="text-white font-bold text-sm" style={{ fontFamily: 'Cairo, sans-serif' }}>أسماء عربية</p>
-                    <p className="text-white/50 text-xs">عرض أسماء المنتخبات بالعربية</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onSettingsChange('arabicNames', !settings.arabicNames)}
-                  className={`w-12 h-6 rounded-full transition-colors cursor-pointer ${settings.arabicNames ? 'bg-green-500' : 'bg-white/20'}`}
-                >
-                  <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.arabicNames ? 'translate-x-6' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Show Predictions */}
-              <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
-                <div className="flex items-center gap-3">
-                  <Zap className="w-5 h-5 text-yellow-400" />
-                  <div>
-                    <p className="text-white font-bold text-sm" style={{ fontFamily: 'Cairo, sans-serif' }}>عرض التنبؤات</p>
-                    <p className="text-white/50 text-xs">إظهار/إخفاء توقعات التحليل في واجهة المباريات</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onSettingsChange('showPredictions', !settings.showPredictions)}
-                  className={`w-12 h-6 rounded-full transition-colors cursor-pointer ${settings.showPredictions ? 'bg-green-500' : 'bg-white/20'}`}
-                >
-                  <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.showPredictions ? 'translate-x-6' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Share */}
-              <button className="w-full flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl text-green-400 font-bold cursor-pointer hover:from-green-500/30 transition-all"
-                style={{ fontFamily: 'Cairo, sans-serif' }}
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: 'العرباوية ماتش',
-                      text: 'تابع مباريات كأس العالم 2026 مباشرة!',
-                      url: window.location.href,
-                    });
-                  }
-                }}
-              >
-                <Share2 className="w-4 h-4" />
-                مشاركة الموقع
-              </button>
-            </div>
-          )}
-
-          {/* External analytics config */}
-          {activeTab === 'settings' && (
-            <div className="mt-4">
-              <h3 className="text-white font-bold mb-2">إعدادات مصادر التحليل الخارجي</h3>
-              <p className="text-white/50 text-sm mb-2">أدخل نقاط نهاية API التي تزود بيانات xG أو Elo أو Opta. استخدم {`{matchId}`} و{`{team}`} كقوالب في الرابط.</p>
-              <AnalyticsConfigForm />
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-white/10 bg-black/20">
-          <p className="text-center text-white/30 text-xs" style={{ fontFamily: 'Cairo, sans-serif' }}>
-            العرباوية ماتش © 2026 | جميع الحقوق محفوظة
-          </p>
+          <button
+            type="button"
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: 'العرباوية ماتش',
+                  text: 'تابع مباريات كأس العالم مباشرة مع تحليلات فورية.',
+                  url: window.location.href,
+                });
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('تم نسخ رابط التطبيق');
+              }
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-3xl bg-green-500 px-4 py-3 text-sm font-semibold text-white"
+          >
+            <Share2 className="w-4 h-4" /> مشاركة التطبيق
+          </button>
         </div>
       </div>
     </div>
