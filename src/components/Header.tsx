@@ -1,4 +1,6 @@
-export default function Header() {
+interface HeaderProps { onOpenAnalyses?: () => void }
+
+export default function Header({ onOpenAnalyses }: HeaderProps) {
   return (
     <header className="bg-gradient-to-r from-[#0a0a2e] via-[#1a1a4e] to-[#0a0a2e] border-b border-green-500/30">
       <div className="container mx-auto px-4 py-3">
@@ -26,6 +28,9 @@ export default function Header() {
               <span className="text-sm">🏆</span>
               <span className="text-white/60 text-[10px] font-bold hidden sm:inline" style={{ fontFamily: 'Cairo' }}>FIFA 2026</span>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => onOpenAnalyses?.()} className="text-white/60 bg-white/5 px-3 py-1 rounded-lg text-[12px]">🧠 تحليلات</button>
           </div>
         </div>
       </div>

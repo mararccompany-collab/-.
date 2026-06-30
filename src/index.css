@@ -5,12 +5,12 @@
   box-sizing: border-box;
 }
 
-html {
+html, body, #root {
   margin: 0;
   padding: 0;
   background: #050510;
   height: 100%;
-  overflow: hidden;
+  min-height: 100%;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -22,16 +22,11 @@ body {
   padding: 0;
   background: #050510;
   color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  user-select: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -54,7 +49,7 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
-  pointer-events: none;
+  pointer-events: auto;
   -webkit-user-drag: none;
   user-select: none;
 }
@@ -70,6 +65,16 @@ img {
 }
 .animate-marquee {
   animation: marquee 35s linear infinite;
+}
+
+/* Improve marquee performance and avoid touch interactions causing layout shifts */
+.animate-marquee {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+}
+.animate-marquee > * {
+  pointer-events: none;
 }
 
 @media (max-width: 768px) {
@@ -96,5 +101,8 @@ img {
   .container {
     padding-left: 12px;
     padding-right: 12px;
+  }
+  html, body {
+    overscroll-behavior-y: contain;
   }
 }

@@ -11,6 +11,7 @@ import SplashScreen from './components/SplashScreen';
 import GoalNotification from './components/GoalNotification';
 import FeaturesPanel from './components/FeaturesPanel';
 import TeamsModal from './components/TeamsModal';
+import AnalysesPage from './components/AnalysesPage';
 import { fetchTodayMatches, fetchMatchesByDate, type ProcessedMatch } from './services/espnApi';
 import { Settings, Heart, HeartOff } from 'lucide-react';
 
@@ -50,6 +51,7 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [allMatches, setAllMatches] = useState<ProcessedMatch[]>([]);
   const [selectedMatch, setSelectedMatch] = useState<ProcessedMatch | null>(null);
+  const [showAnalyses, setShowAnalyses] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
@@ -59,7 +61,7 @@ export default function App() {
   const [favorites, setFavorites] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('fav') || '[]'); } catch { return []; }
   });
-  const [settings, setSettings] = useState({ notifications: true, sound: false, darkMode: true, arabicNames: true });
+  const [settings, setSettings] = useState({ notifications: true, sound: false, darkMode: true, arabicNames: true, showPredictions: true });
   const [goalNotif, setGoalNotif] = useState<{ team: string; teamLogo: string; score: string } | null>(null);
 
   const selectedIdRef = useRef<string | null>(null);
@@ -132,6 +134,20 @@ export default function App() {
     if (!showSplash) loadMatches();
   }, [showSplash]);
 
+  // Handle deep link to /analyses on initial load
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const onPop = () => {
+        if (window.location.pathname === '/analyses') setShowAnalyses(true);
+        else setShowAnalyses(false);
+      };
+      // check at mount
+      if (window.location.pathname === '/analyses') setShowAnalyses(true);
+      window.addEventListener('popstate', onPop);
+      return () => window.removeEventListener('popstate', onPop);
+    }
+  }, []);
+
   // Auto refresh every 30s
   useEffect(() => {
     if (showSplash) return;
@@ -148,6 +164,40 @@ export default function App() {
   const tickerMatches = allMatches.filter(m => m.status === 'live' || m.status === 'finished');
 
   if (showSplash) return <SplashScreen onEnter={() => setShowSplash(false)} />;
+
+  const openAnalyses = () => {
+    setShowAnalyses(true);
+    try {
+      window.history.pushState({}, '', '/analyses');
+      document.title = 'تحليلات اليوم — العرباوية ماتش';
+      let md = document.querySelector('meta[name="description"]');
+      if (!md) { md = document.createElement('meta'); md.setAttribute('name', 'description'); document.head.appendChild(md); }
+      md.setAttribute('content', 'تحليلات يومية للمباريات: توقعات، احتمالات، وملاحظات خبيرية قابلة للمشاركة.');
+    } catch {}
+  };
+
+  const closeAnalyses = () => {
+    setShowAnalyses(false);
+    try { window.history.replaceState({}, '', '/'); document.title = 'العرباوية ماتش'; } catch {}
+  };
+
+  // Analyses page
+  if (showAnalyses) return (
+    <div className="min-h-screen bg-[#050510]">
+      <div className="container mx-auto px-3 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-white font-bold text-lg">🧠 تحليلات اليوم</h2>
+          <div>
+            <button onClick={() => closeAnalyses()} className="bg-white/5 text-white/60 px-3 py-1 rounded-lg">عودة</button>
+          </div>
+        </div>
+      </div>
+      <div className="container mx-auto px-3 py-4">
+        {/* Lazy import component to avoid heavy initial bundle */}
+        <AnalysesPage matches={allMatches} getArabicName={getArabicName} settings={settings} />
+      </div>
+    </div>
+  );
 
   if (loading) return (
     <div className="flex-1 flex items-center justify-center bg-[#050510]" dir="rtl">
@@ -167,7 +217,7 @@ export default function App() {
         settings={settings} onSettingsChange={(k, v) => setSettings(p => ({ ...p, [k]: v }))}
         favorites={favorites} onToggleFavorite={(id) => setFavorites(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id])} />
 
-      <Header />
+      <Header onOpenAnalyses={() => openAnalyses()} />
       <Ticker matches={tickerMatches.length > 0 ? tickerMatches : allMatches.slice(0, 5)} getArabicName={getArabicName} />
 
       {/* Update bar */}
@@ -258,7 +308,7 @@ export default function App() {
               </span>
             </div>
 
-            {selectedMatch && <FeaturedMatch match={selectedMatch} getArabicName={getArabicName} />}
+            {selectedMatch && <FeaturedMatch match={selectedMatch} getArabicName={getArabicName} settings={settings} />}
 
             {/* Quick switcher */}
             <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
@@ -279,7 +329,7 @@ export default function App() {
           {/* Sidebar */}
           <div className="lg:col-span-3 order-3 space-y-3">
             <h2 className="text-white text-sm font-bold" style={{ fontFamily: 'Cairo' }}>📊 التفاصيل</h2>
-            {selectedMatch && <MatchDetails match={selectedMatch} getArabicName={getArabicName} />}
+            {selectedMatch && <MatchDetails match={selectedMatch} getArabicName={getArabicName} settings={settings} />}
             <GroupStandings />
             <TopScorers />
             <div className="bg-white/[0.03] border border-white/10 rounded-xl p-3">

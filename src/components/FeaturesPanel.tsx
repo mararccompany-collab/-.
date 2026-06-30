@@ -4,6 +4,38 @@ import {
   Settings, X, Check, Volume2, VolumeX,
   Smartphone, Globe, Trophy, Zap
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import external from '../services/externalAnalytics';
+
+function AnalyticsConfigForm() {
+  const [xg, setXg] = useState('');
+  const [elo, setElo] = useState('');
+  const [opta, setOpta] = useState('');
+
+  useEffect(() => {
+    try {
+      const cfg = JSON.parse(localStorage.getItem('ext_analytics') || '{}');
+      setXg(cfg.xgApi || ''); setElo(cfg.eloApi || ''); setOpta(cfg.optaApi || '');
+    } catch { }
+  }, []);
+
+  const save = () => {
+    external.saveConfig({ xgApi: xg || undefined, eloApi: elo || undefined, optaApi: opta || undefined });
+    alert('تم حفظ إعدادات التحليل الخارجي');
+  };
+
+  return (
+    <div className="space-y-2">
+      <input value={xg} onChange={e=>setXg(e.target.value)} placeholder="xG API endpoint (مثال: https://api.example.com/xg?match={matchId})" className="w-full p-2 bg-white/5 rounded-md text-white text-sm" />
+      <input value={elo} onChange={e=>setElo(e.target.value)} placeholder="Elo API endpoint (مثال: https://api.example.com/elo?team={team})" className="w-full p-2 bg-white/5 rounded-md text-white text-sm" />
+      <input value={opta} onChange={e=>setOpta(e.target.value)} placeholder="Opta API endpoint (مثال: https://api.example.com/opta?match={matchId})" className="w-full p-2 bg-white/5 rounded-md text-white text-sm" />
+      <div className="flex gap-2">
+        <button onClick={save} className="bg-green-500 px-3 py-1 rounded-md text-white">حفظ</button>
+        <button onClick={()=>{ setXg(''); setElo(''); setOpta(''); external.saveConfig({}); alert('تم المسح');}} className="bg-white/5 px-3 py-1 rounded-md text-white/60">مسح</button>
+      </div>
+    </div>
+  );
+}
 
 interface FeaturesPanelProps {
   isOpen: boolean;
@@ -33,6 +65,7 @@ export default function FeaturesPanel({
     { icon: <Bell className="w-5 h-5 text-red-400" />, title: 'إشعارات الأهداف', desc: 'تنبيه فوري', active: settings.notifications },
     { icon: <Star className="w-5 h-5 text-yellow-400" />, title: 'المباريات المفضلة', desc: `${favorites.length} مباراة محفوظة`, active: favorites.length > 0 },
     { icon: <Smartphone className="w-5 h-5 text-purple-400" />, title: 'تصميم متجاوب', desc: 'جوال وكمبيوتر', active: true },
+    { icon: <Globe className="w-5 h-5 text-blue-300" />, title: 'تحليلات المباريات', desc: 'توقعات ونصائح فنية', active: true },
   ];
 
   return (
@@ -155,6 +188,23 @@ export default function FeaturesPanel({
                 </button>
               </div>
 
+              {/* Show Predictions */}
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
+                <div className="flex items-center gap-3">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  <div>
+                    <p className="text-white font-bold text-sm" style={{ fontFamily: 'Cairo, sans-serif' }}>عرض التنبؤات</p>
+                    <p className="text-white/50 text-xs">إظهار/إخفاء توقعات التحليل في واجهة المباريات</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => onSettingsChange('showPredictions', !settings.showPredictions)}
+                  className={`w-12 h-6 rounded-full transition-colors cursor-pointer ${settings.showPredictions ? 'bg-green-500' : 'bg-white/20'}`}
+                >
+                  <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.showPredictions ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                </button>
+              </div>
+
               {/* Share */}
               <button className="w-full flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-green-500/20 to-green-600/10 border border-green-500/30 rounded-xl text-green-400 font-bold cursor-pointer hover:from-green-500/30 transition-all"
                 style={{ fontFamily: 'Cairo, sans-serif' }}
@@ -171,6 +221,15 @@ export default function FeaturesPanel({
                 <Share2 className="w-4 h-4" />
                 مشاركة الموقع
               </button>
+            </div>
+          )}
+
+          {/* External analytics config */}
+          {activeTab === 'settings' && (
+            <div className="mt-4">
+              <h3 className="text-white font-bold mb-2">إعدادات مصادر التحليل الخارجي</h3>
+              <p className="text-white/50 text-sm mb-2">أدخل نقاط نهاية API التي تزود بيانات xG أو Elo أو Opta. استخدم {`{matchId}`} و{`{team}`} كقوالب في الرابط.</p>
+              <AnalyticsConfigForm />
             </div>
           )}
         </div>

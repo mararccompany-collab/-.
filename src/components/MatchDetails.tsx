@@ -1,12 +1,16 @@
 import type { ProcessedMatch } from '../services/espnApi';
+import analyzeMatch from '../utils/matchAnalysis';
+import ManualNote from './ManualNote';
+import AsyncDetailedAnalysis from './AsyncDetailedAnalysis';
 import { Clock, MapPin, Tv, Globe } from 'lucide-react';
 
 interface MatchDetailsProps {
   match: ProcessedMatch;
   getArabicName: (name: string) => string;
+  settings?: { showPredictions?: boolean };
 }
 
-export default function MatchDetails({ match, getArabicName }: MatchDetailsProps) {
+export default function MatchDetails({ match, getArabicName, settings }: MatchDetailsProps) {
   const matchDate = new Date(match.date);
   const dateStr = matchDate.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   const timeStr = matchDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
@@ -30,6 +34,71 @@ export default function MatchDetails({ match, getArabicName }: MatchDetailsProps
             <span className="text-white text-[11px] font-bold" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
             <img src={match.awayLogo} alt="" className="w-6 h-6" />
           </div>
+        </div>
+        {/* Analysis */}
+        <div className="p-4">
+          <h4 className="text-white font-bold text-xs mb-2" style={{ fontFamily: 'Cairo' }}>🧠 تحليل المباراة</h4>
+          {settings?.showPredictions === false ? (
+            <p className="text-white/30 text-[12px]">عرض التنبؤات معطّل من الإعدادات.</p>
+          ) : (
+            (() => {
+              try {
+                  return (
+                    <div className="space-y-2">
+                      <AsyncDetailedAnalysis match={match} />
+                );
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 text-[11px] text-white/60">احتمالات الفوز</div>
+                      <div className="text-white font-bold text-[12px]">{a.homeWinProb}%</div>
+                    </div>
+                    <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                      <div className="bg-gradient-to-r from-green-500 to-green-400 h-full" style={{ width: `${a.homeWinProb}%` }} />
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 text-[11px] text-white/60">تعادل</div>
+                      <div className="text-white font-bold text-[12px]">{a.drawProb}%</div>
+                    </div>
+                    <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                      <div className="bg-gray-500 h-full" style={{ width: `${a.drawProb}%` }} />
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 text-[11px] text-white/60">فرص فوز الضيف</div>
+                      <div className="text-white font-bold text-[12px]">{a.awayWinProb}%</div>
+                    </div>
+                    <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-full" style={{ width: `${a.awayWinProb}%` }} />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-white/60 mt-2">
+                      <div>التنبؤ: <span className="text-white font-bold">{a.prediction}</span></div>
+                      <div>ثقة: <span className="text-green-400 font-bold">{a.confidence}%</span></div>
+                    </div>
+
+                    {a.keyPlayers.length > 0 && (
+                      <div className="mt-2">
+                        <div className="text-white/60 text-[11px] mb-1">لاعبون مقترحون للتتبّع</div>
+                        <div className="flex gap-2 flex-wrap">
+                          {a.keyPlayers.map((p, i) => (
+                            <div key={i} className="bg-white/5 text-white/70 px-2 py-1 rounded-lg text-[11px]">{p}</div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              } catch (e) {
+                return <p className="text-white/30 text-[12px]">لا توجد بيانات كافية لتحليل المباراة.</p>;
+              }
+            })()
+          )}
+        </div>
+
+        {/* Manual notes (saved in localStorage) */}
+        <div className="p-4 border-t border-white/5">
+          <h4 className="text-white font-bold text-xs mb-2">✍️ ملاحظة محرّرة</h4>
+          <ManualNote matchId={match.id} />
         </div>
 
         {/* Info */}

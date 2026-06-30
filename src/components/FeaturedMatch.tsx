@@ -1,11 +1,14 @@
 import { MapPin, ExternalLink, Radio, Eye, Play } from 'lucide-react';
 import type { ProcessedMatch } from '../services/espnApi';
 import LiveBadge from './LiveBadge';
+import AsyncAnalysisSummary from './AsyncAnalysisSummary';
 import Countdown from './Countdown';
+import analyzeMatch from '../utils/matchAnalysis';
 
 interface FeaturedMatchProps {
   match: ProcessedMatch;
   getArabicName: (name: string) => string;
+  settings?: { showPredictions?: boolean };
 }
 
 // Safe link opener - avoids COOP errors completely
@@ -70,7 +73,7 @@ function getMatchLinks(match: ProcessedMatch, getAr: (n: string) => string) {
   ];
 }
 
-export default function FeaturedMatch({ match, getArabicName }: FeaturedMatchProps) {
+export default function FeaturedMatch({ match, getArabicName, settings }: FeaturedMatchProps) {
   const isLive = match.status === 'live';
   const isEgypt = match.homeTeam.includes('Egypt') || match.awayTeam.includes('Egypt');
   const matchLinks = getMatchLinks(match, getArabicName);
@@ -146,6 +149,20 @@ export default function FeaturedMatch({ match, getArabicName }: FeaturedMatchPro
             <span className="text-green-300 text-[10px] font-bold col-span-3">{match.group}</span>
           )}
         </div>
+
+        {/* Quick analysis badge */}
+        {settings?.showPredictions !== false && (
+          <div className="px-4 pb-3">
+            {(() => {
+              try {
+                const a = analyzeMatch(match);
+                return (
+                  <AsyncAnalysisSummary match={match} base={a} />
+                );
+              } catch { return null; }
+            })()}
+          </div>
+        )}
 
         {/* Form bar */}
         {(match.homeForm || match.awayForm) && (
