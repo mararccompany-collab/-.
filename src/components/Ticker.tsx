@@ -13,7 +13,7 @@ export default function Ticker({ matches, getArabicName }: TickerProps) {
       <div className="flex items-center h-full">
         <div className="bg-red-600 text-white text-[10px] font-bold px-2.5 h-full flex items-center gap-1 shrink-0 z-10 relative">
           <span className="w-1.5 h-1.5 bg-white rounded-full" />
-          <span style={{ fontFamily: 'Cairo' }}>كأس العالم</span>
+          <span style={{ fontFamily: 'Cairo' }}>كأس العالم 2026</span>
         </div>
         <div className="overflow-hidden flex-1 h-full relative">
           <div className="animate-marquee absolute top-0 left-0 h-full flex items-center gap-5 whitespace-nowrap pl-3">

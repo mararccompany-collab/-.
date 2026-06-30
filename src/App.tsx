@@ -95,6 +95,8 @@ export default function App() {
     localStorage.setItem('app_settings', JSON.stringify(settings));
   }, [settings]);
 
+  const [refreshTick, setRefreshTick] = useState(0);
+
   useEffect(() => {
     async function loadMatches() {
       try {
@@ -116,6 +118,11 @@ export default function App() {
     }
 
     loadMatches();
+    const interval = setInterval(() => {
+      loadMatches();
+      setRefreshTick(t => t + 1);
+    }, 20000);
+    return () => clearInterval(interval);
   }, [settings.showLiveOnly]);
 
   const handleSettingsChange = (next: AppSettings) => setSettings(next);

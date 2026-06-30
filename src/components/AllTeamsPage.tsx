@@ -70,7 +70,7 @@ export default function AllTeamsPage() {
             <div className="flex flex-col gap-2">
               {visible.map(team => {
                 const isExpanded = expandedTeam === team.id;
-                const isArab = ['qatar', 'saudi-arabia', 'morocco', 'tunisia', 'egypt', 'algeria', 'iraq', 'jordan'].includes(team.id);
+                const isArab = ['morocco', 'tunisia', 'egypt', 'algeria', 'iraq', 'jordan'].includes(team.id);
                 return (
                   <div key={team.id}
                     className={`rounded-xl border transition-all duration-300 overflow-hidden ${
@@ -108,10 +108,10 @@ export default function AllTeamsPage() {
                           </div>
                           <div className="flex flex-wrap gap-1">
                             {team.players.map(p => (
-                              <div key={p.number} className="bg-white/[0.04] border border-white/5 rounded-md px-2 py-1 flex items-center gap-1.5">
-                                <span className="text-[8px] text-green-400 font-black min-w-[14px]" style={{ fontFamily: 'Orbitron' }}>{p.number}</span>
+                              <div key={p.num} className="bg-white/[0.04] border border-white/5 rounded-md px-2 py-1 flex items-center gap-1.5">
+                                <span className="text-[8px] text-green-400 font-black min-w-[14px]" style={{ fontFamily: 'Orbitron' }}>{p.num}</span>
                                 <span className="text-white text-[9px]" style={{ fontFamily: 'Cairo' }}>{p.nameAr}</span>
-                                <span className="text-white/30 text-[7px]" style={{ fontFamily: 'Cairo' }}>{p.roleAr}</span>
+                                <span className="text-white/30 text-[7px]" style={{ fontFamily: 'Cairo' }}>{p.posAr}</span>
                               </div>
                             ))}
                           </div>
