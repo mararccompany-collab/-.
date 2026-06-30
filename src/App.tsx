@@ -20,6 +20,7 @@ import WorldCupTimeline2026 from './components/WorldCupTimeline2026';
 import AdvancedPredictions from './components/AdvancedPredictions';
 import EliminationStatistics from './components/EliminationStatistics';
 import RoundAnalysis from './components/RoundAnalysis';
+import LiveMatch from './components/LiveMatch';
 import { fetchTodayMatches, type ProcessedMatch } from './services/espnApi';
 
 const teamNameAr: Record<string, string> = {
@@ -78,7 +79,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<AppSettings>({ showPredictions: true, showLiveOnly: false });
-  const [page, setPage] = useState<'home' | 'timeline' | 'teams' | 'formations' | 'winners' | 'bracket' | 'predictions' | 'records' | 'teams-stats' | 'timeline-2026' | 'advanced-predictions' | 'elimination' | 'rounds'>('home');
+  const [page, setPage] = useState<'home' | 'live' | 'timeline' | 'teams' | 'formations' | 'winners' | 'bracket' | 'predictions' | 'records' | 'teams-stats' | 'timeline-2026' | 'advanced-predictions' | 'elimination' | 'rounds'>('home');
 
   useEffect(() => {
     const stored = localStorage.getItem('app_settings');
@@ -159,6 +160,7 @@ export default function App() {
         <div className="flex flex-wrap gap-1.5 p-1.5 bg-white/[0.03] rounded-2xl border border-white/5 overflow-x-auto">
           {[
             { key: 'home', label: 'الرئيسية', icon: '🏠' },
+            { key: 'live', label: 'مباشر', icon: '🔴' },
             { key: 'timeline-2026', label: 'الجدول 2026', icon: '📅' },
             { key: 'teams-stats', label: 'المنتخبات', icon: '🏳️' },
             { key: 'teams', label: 'جميع الفرق', icon: '⚽' },
@@ -184,6 +186,12 @@ export default function App() {
             </button>
           ))}
         </div>
+
+        {page === 'live' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <LiveMatch />
+          </div>
+        )}
 
         {page === 'home' && (<>
           <div className="grid gap-4 lg:grid-cols-[1fr_260px]">
