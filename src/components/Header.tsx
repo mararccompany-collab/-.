@@ -4,7 +4,7 @@ interface HeaderProps { onOpenAnalyses?: () => void }
 
 export default function Header({ onOpenAnalyses }: HeaderProps) {
   return (
-    <header className="bg-gradient-to-r from-[#0a0a2e] via-[#1a1a4e] to-[#0a0a2e] border-b border-green-500/30">
+    <header className="bg-[#0b1324] border-b border-white/10">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">

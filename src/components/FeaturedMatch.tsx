@@ -93,12 +93,7 @@ export default function FeaturedMatch({ match, getArabicName, settings }: Featur
   return (
     <div className="rounded-2xl overflow-hidden bg-[#0d1b2a] border border-green-500/20">
       {/* Match Header */}
-      <div className="relative bg-gradient-to-br from-green-900/90 via-green-800/70 to-green-900/90 p-5 md:p-8">
-        <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" style={{ pointerEvents: 'none' }}>
-          <rect x="40" y="30" width="920" height="440" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/30"/>
-          <line x1="500" y1="30" x2="500" y2="470" stroke="currentColor" strokeWidth="2" className="text-white/30"/>
-          <circle cx="500" cy="250" r="70" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/30"/>
-        </svg>
+      <div className="relative bg-[#0e231c] p-5 md:p-8">
 
         <div className="absolute top-3 left-3 flex items-center gap-2 flex-wrap z-10">
           {isEgypt && <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg">🇪🇬 مباراة مصر</span>}
