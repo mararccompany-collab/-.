@@ -11,10 +11,11 @@
     "dev:host": "vite --host"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "2.1.1",
-    "marked": "5.1.1",
     "dompurify": "^3.0.7",
     "lucide-react": "^1.21.0",
+    "marked": "5.1.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "tailwind-merge": "3.4.0"
