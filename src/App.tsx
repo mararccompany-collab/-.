@@ -12,6 +12,9 @@ import PastWinners from './components/PastWinners';
 import TeamFormation from './components/TeamFormation';
 import AllTeamsPage from './components/AllTeamsPage';
 import WorldCupTimeline from './components/WorldCupTimeline';
+import WorldCupBracket from './components/WorldCupBracket';
+import GroupPredictions from './components/GroupPredictions';
+import WorldCupRecords from './components/WorldCupRecords';
 import { fetchTodayMatches, type ProcessedMatch } from './services/espnApi';
 
 const teamNameAr: Record<string, string> = {
@@ -38,6 +41,24 @@ const teamNameAr: Record<string, string> = {
   Belgium: 'بلجيكا',
   Denmark: 'الدانمارك',
   Croatia: 'كرواتيا',
+  Egypt: 'مصر',
+  Algeria: 'الجزائر',
+  Iraq: 'العراق',
+  Qatar: 'قطر',
+  Tunisia: 'تونس',
+  Morocco: 'المغرب',
+  'Saudi Arabia': 'السعودية',
+  Senegal: 'السنغال',
+  Poland: 'بولندا',
+  Switzerland: 'سويسرا',
+  Serbia: 'صربيا',
+  Cameroon: 'الكاميرون',
+  Ghana: 'غانا',
+  Uruguay: 'الأوروغواي',
+  'South Korea': 'كوريا الجنوبية',
+  Wales: 'ويلز',
+  'Costa Rica': 'كوستاريكا',
+  Japan: 'اليابان',
 };
 
 function getArabicName(name: string) {
@@ -57,7 +78,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<AppSettings>({ showPredictions: true, showLiveOnly: false });
-  const [page, setPage] = useState<'home' | 'timeline' | 'teams' | 'formations' | 'winners'>('home');
+  const [page, setPage] = useState<'home' | 'timeline' | 'teams' | 'formations' | 'winners' | 'bracket' | 'predictions' | 'records'>('home');
 
   useEffect(() => {
     const stored = localStorage.getItem('app_settings');
@@ -134,7 +155,10 @@ export default function App() {
             { key: 'timeline', label: 'الجدول', icon: '📅' },
             { key: 'teams', label: 'المنتخبات', icon: '🏳️' },
             { key: 'formations', label: 'التشكيلات', icon: '🧑‍🤝‍🧑' },
+            { key: 'bracket', label: 'المشوار', icon: '🏟️' },
+            { key: 'predictions', label: 'التوقعات', icon: '📊' },
             { key: 'winners', label: 'السجلات', icon: '🏆' },
+            { key: 'records', label: 'الأرقام', icon: '📈' },
           ].map(tab => (
             <button key={tab.key}
               onClick={() => setPage(tab.key as typeof page)}
@@ -262,10 +286,31 @@ export default function App() {
           </div>
         )}
 
+        {page === 'bracket' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>🏟️ مشوار البطولة - من المجموعات إلى النهائي</h2>
+            <WorldCupBracket />
+          </div>
+        )}
+
+        {page === 'predictions' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>📊 التوقعات ونسب التأهل</h2>
+            <GroupPredictions />
+          </div>
+        )}
+
         {page === 'winners' && (
           <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
             <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>🏆 سجل الفائزين بكأس العالم</h2>
             <PastWinners />
+          </div>
+        )}
+
+        {page === 'records' && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold mb-4" style={{ fontFamily: 'Cairo' }}>📈 أرقام قياسية وإحصائيات</h2>
+            <WorldCupRecords />
           </div>
         )}
       </main>
