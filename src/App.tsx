@@ -2,8 +2,12 @@
 import Header from './components/Header';
 import MatchCard from './components/MatchCard';
 import MatchDetails from './components/MatchDetails';
+import FeaturedMatch from './components/FeaturedMatch';
+import TopScorers from './components/TopScorers';
 import FeaturesPanel from './components/FeaturesPanel';
 import AnalysesPage from './components/AnalysesPage';
+import Ticker from './components/Ticker';
+import GroupStandings from './components/GroupStandings';
 import { fetchTodayMatches, type ProcessedMatch } from './services/espnApi';
 
 const teamNameAr: Record<string, string> = {
@@ -90,6 +94,9 @@ export default function App() {
 
   const handleSettingsChange = (next: AppSettings) => setSettings(next);
 
+  const liveMatchesCount = matches.filter((match) => match.status === 'live').length;
+  const upcomingMatches = matches.filter((match) => match.status === 'upcoming').slice(0, 4);
+
   if (showAnalyses) {
     return (
       <div className="min-h-screen bg-[#070a14] text-white">
@@ -112,7 +119,48 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#070a14] text-white">
       <Header onOpenAnalyses={() => setShowAnalyses(true)} onOpenSettings={() => setShowSettings(true)} />
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-4 py-6 space-y-6">
+        <Ticker matches={matches} getArabicName={getArabicName} />
+
+        <div className="grid gap-4 lg:grid-cols-[1fr_260px]">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-base font-semibold">مواعيد المباريات</h2>
+                <p className="text-sm text-white/50">أقرب المباريات القادمة وحالة المباريات اليوم.</p>
+              </div>
+              <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-300">{liveMatchesCount} مباشر</span>
+            </div>
+
+            {upcomingMatches.length > 0 ? (
+              <div className="mt-4 space-y-3">
+                {upcomingMatches.map((match) => (
+                  <div key={match.id} className="rounded-2xl border border-white/10 bg-[#081020] p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="text-[11px] text-white/60">{new Date(match.date).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}</div>
+                      <div className="text-sm font-semibold text-white">{getArabicName(match.homeTeam)} vs {getArabicName(match.awayTeam)}</div>
+                    </div>
+                    <div className="mt-1 text-[10px] text-white/40">{match.group || 'كأس العالم'} • {match.venue || 'الملعب غير معروف'}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-4 text-sm text-white/50">لا توجد مباريات قادمة في القائمة.</div>
+            )}
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-base font-semibold">كل المميزات</h2>
+            <ul className="mt-4 space-y-2 text-sm text-white/60">
+              <li>⚽ ترتيب المجموعات مباشر</li>
+              <li>📺 مواقع البث المباشر الشائعة</li>
+              <li>📰 شريط الأخبار للمباريات</li>
+              <li>🧠 تحليلات الأهداف والبطاقات</li>
+              <li>⏱️ مواعيد بداية المباريات</li>
+            </ul>
+          </div>
+        </div>
+
         <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
           <section className="space-y-4">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
@@ -138,13 +186,26 @@ export default function App() {
                 ))}
               </div>
             )}
+
+            <div className="mt-4 space-y-4">
+              <TopScorers />
+              <GroupStandings />
+            </div>
           </section>
 
-          <section className="rounded-3xl border border-white/10 bg-white/5 p-4">
-            {selectedMatch ? (
-              <MatchDetails match={selectedMatch} getArabicName={getArabicName} settings={settings} />
-            ) : (
-              <div className="py-20 text-center text-white/60">اختر مباراة من القائمة لعرض التفاصيل.</div>
+          <section className="space-y-4">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+              {selectedMatch ? (
+                <MatchDetails match={selectedMatch} getArabicName={getArabicName} settings={settings} />
+              ) : (
+                <div className="py-20 text-center text-white/60">اختر مباراة من القائمة لعرض التفاصيل.</div>
+              )}
+            </div>
+
+            {selectedMatch && (
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                <FeaturedMatch match={selectedMatch} getArabicName={getArabicName} settings={settings} />
+              </div>
             )}
           </section>
         </div>
