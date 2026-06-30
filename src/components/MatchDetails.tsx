@@ -24,7 +24,7 @@ export default function MatchDetails({ match, getArabicName, settings }: MatchDe
         {/* Score */}
         <div className="flex items-center justify-between bg-white/[0.03] rounded-lg p-2.5">
           <div className="flex items-center gap-1.5">
-            <img src={match.homeLogo} alt="" className="w-6 h-6" />
+            <img src={match.homeLogo} alt="" loading="lazy" decoding="async" className="w-6 h-6" />
             <span className="text-white text-[11px] font-bold" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.homeTeam)}</span>
           </div>
           <span className="text-lg font-black text-white" style={{ fontFamily: 'Orbitron', direction: 'ltr', display: 'inline-block' }}>
@@ -32,7 +32,7 @@ export default function MatchDetails({ match, getArabicName, settings }: MatchDe
           </span>
           <div className="flex items-center gap-1.5">
             <span className="text-white text-[11px] font-bold" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
-            <img src={match.awayLogo} alt="" className="w-6 h-6" />
+            <img src={match.awayLogo} alt="" loading="lazy" decoding="async" className="w-6 h-6" />
           </div>
         </div>
         {/* Analysis */}

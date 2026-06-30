@@ -19,13 +19,13 @@ export default function Ticker({ matches, getArabicName }: TickerProps) {
           <div className="animate-marquee absolute top-0 left-0 h-full flex items-center gap-5 whitespace-nowrap pl-3">
             {matches.map((match, i) => (
               <span key={i} className="inline-flex items-center gap-1.5 text-xs text-white/70">
-                <img src={match.homeLogo} alt="" className="w-3.5 h-3.5" />
+                <img src={match.homeLogo} alt="" loading="lazy" decoding="async" className="w-3.5 h-3.5" />
                 <span className="font-semibold text-white text-[11px]">{getArabicName(match.homeTeam)}</span>
                 <span className="font-black text-green-400 text-[11px]" style={{ fontFamily: 'Orbitron', direction: 'ltr' }}>
                   {match.homeScore}-{match.awayScore}
                 </span>
                 <span className="font-semibold text-white text-[11px]">{getArabicName(match.awayTeam)}</span>
-                <img src={match.awayLogo} alt="" className="w-3.5 h-3.5" />
+                <img src={match.awayLogo} alt="" loading="lazy" decoding="async" className="w-3.5 h-3.5" />
                 {match.status === 'live' && <span className="text-red-400 text-[9px] font-bold">({match.clock})</span>}
                 {match.status === 'finished' && <span className="text-gray-500 text-[9px]">(انتهت)</span>}
                 <span className="text-white/10 mx-1">|</span>

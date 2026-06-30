@@ -317,9 +317,9 @@ export default function App() {
                   className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] cursor-pointer ${
                     selectedMatch?.id === m.id ? 'bg-green-500/20 border border-green-500/40 text-green-400' : 'bg-white/5 border border-white/10 text-white/50'
                   }`}>
-                  <img src={m.homeLogo} alt="" className="w-4 h-4" />
+                  <img src={m.homeLogo} alt="" loading="lazy" decoding="async" className="w-4 h-4" />
                   <span className="font-bold" style={{ fontFamily: 'Orbitron', direction: 'ltr', display: 'inline-block' }}>{m.homeScore}-{m.awayScore}</span>
-                  <img src={m.awayLogo} alt="" className="w-4 h-4" />
+                  <img src={m.awayLogo} alt="" loading="lazy" decoding="async" className="w-4 h-4" />
                   {m.status === 'live' && <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />}
                 </button>
               ))}

@@ -48,7 +48,7 @@ export default function MatchCard({ match, onSelect, isSelected, getArabicName }
 
         {/* Row 2: Home team */}
         <div className="flex items-center gap-1.5 overflow-hidden min-w-0 justify-start">
-          <img src={match.homeLogo} alt="" className="w-5 h-5 shrink-0" />
+          <img src={match.homeLogo} alt="" loading="lazy" decoding="async" className="w-5 h-5 shrink-0" />
           <span className="text-white text-[11px] font-bold truncate" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.homeTeam)}</span>
         </div>
 
@@ -66,7 +66,7 @@ export default function MatchCard({ match, onSelect, isSelected, getArabicName }
         {/* Row 2: Away team */}
         <div className="flex items-center gap-1.5 overflow-hidden min-w-0 justify-end">
           <span className="text-white text-[11px] font-bold truncate" style={{ fontFamily: 'Cairo' }}>{getArabicName(match.awayTeam)}</span>
-          <img src={match.awayLogo} alt="" className="w-5 h-5 shrink-0" />
+          <img src={match.awayLogo} alt="" loading="lazy" decoding="async" className="w-5 h-5 shrink-0" />
         </div>
 
         {/* Row 3: Info */}

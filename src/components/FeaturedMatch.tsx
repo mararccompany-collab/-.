@@ -113,7 +113,7 @@ export default function FeaturedMatch({ match, getArabicName, settings }: Featur
         <div className="pt-6 pb-2" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '8px', alignItems: 'center', justifyItems: 'center' }}>
           {/* Home team */}
           <div className="flex flex-col items-center gap-2" style={{ maxWidth: 120 }}>
-            <img src={match.homeLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl" style={{ maxWidth: '100%', height: 'auto' }}/>
+            <img src={match.homeLogo} alt="" loading="lazy" decoding="async" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl" style={{ maxWidth: '100%', height: 'auto' }}/>
             <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo', wordBreak: 'break-word' }}>{getArabicName(match.homeTeam)}</span>
           </div>
 
@@ -139,7 +139,7 @@ export default function FeaturedMatch({ match, getArabicName, settings }: Featur
 
           {/* Away team */}
           <div className="flex flex-col items-center gap-2" style={{ maxWidth: 120 }}>
-            <img src={match.awayLogo} alt="" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl" style={{ maxWidth: '100%', height: 'auto' }}/>
+            <img src={match.awayLogo} alt="" loading="lazy" decoding="async" className="w-12 h-12 md:w-20 md:h-20 drop-shadow-2xl" style={{ maxWidth: '100%', height: 'auto' }}/>
             <span className="text-white text-xs md:text-lg font-black text-center leading-tight" style={{ fontFamily: 'Cairo', wordBreak: 'break-word' }}>{getArabicName(match.awayTeam)}</span>
             {match.awayRecord && <span className="text-white/25 text-[8px]">{match.awayRecord}</span>}
           </div>

@@ -43,7 +43,7 @@ export default function AnalysesPage({ matches, getArabicName, settings }: Analy
           <div key={m.id} className="bg-white/5 p-3 rounded-xl border border-white/10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src={m.homeLogo} alt="" className="w-8 h-8" />
+                <img src={m.homeLogo} alt="" loading="lazy" decoding="async" className="w-8 h-8" />
                 <div>
                   <div className="text-white font-bold">{getArabicName(m.homeTeam)} <span className="text-white/50">vs</span> {getArabicName(m.awayTeam)}</div>
                   <div className="text-white/40 text-xs">{m.group} • {new Date(m.date).toLocaleString('ar-EG')}</div>

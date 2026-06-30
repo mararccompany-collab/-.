@@ -35,7 +35,7 @@ export default function TopScorers() {
               <div key={s.name} className={`flex items-center gap-2 p-1.5 rounded-lg ${i < 3 ? 'bg-yellow-500/5' : ''}`}>
                 <span className={`text-[11px] font-black w-5 text-center ${i === 0 ? 'text-yellow-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-orange-400' : 'text-white/30'}`}
                   style={{ fontFamily: 'Orbitron', direction: 'ltr', display: 'inline-block' }}>{i + 1}</span>
-                <img src={s.teamLogo} alt="" className="w-4 h-4 shrink-0" />
+                <img src={s.teamLogo} alt="" loading="lazy" decoding="async" className="w-4 h-4 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-[10px] font-bold truncate">{s.name}</p>
                   <p className="text-white/30 text-[8px]">{teamAr[s.team] || s.team}</p>

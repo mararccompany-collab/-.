@@ -8,7 +8,7 @@ export default function Header({ onOpenAnalyses }: HeaderProps) {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img src={logoUrl} alt="logo" className="w-10 h-10 rounded-xl shadow-lg object-cover" />
+            <img src={logoUrl} alt="logo" loading="lazy" decoding="async" className="w-10 h-10 rounded-xl shadow-lg object-cover" />
             <div>
               <h1 className="text-lg md:text-2xl font-black text-white leading-tight" style={{ fontFamily: 'Cairo, sans-serif' }}>
                 العرباوية<span className="text-green-400"> ماتش</span>

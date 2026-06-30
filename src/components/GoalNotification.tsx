@@ -20,7 +20,7 @@ export default function GoalNotification({ team, teamLogo, score, onClose }: Goa
         <div>
           <p className="text-sm font-black" style={{ fontFamily: 'Cairo' }}>هدف! 🎉</p>
           <div className="flex items-center gap-1.5 mt-0.5">
-            <img src={teamLogo} alt="" className="w-4 h-4" />
+            <img src={teamLogo} alt="" loading="lazy" decoding="async" className="w-4 h-4" />
             <span className="font-bold text-sm">{team}</span>
             <span className="text-white/70 text-xs">({score})</span>
           </div>

@@ -153,7 +153,7 @@ export default function GroupStandings() {
                             <td className="py-1.5 px-1 text-white/50 font-bold">{idx + 1}</td>
                             <td className="py-1.5 px-1">
                               <div className="flex items-center gap-1">
-                                <img src={team.logo} alt="" className="w-4 h-4 rounded-full" />
+                                <img src={team.logo} alt="" loading="lazy" decoding="async" className="w-4 h-4 rounded-full" />
                                 <span className={`font-bold truncate max-w-[60px] ${isHighlight ? 'text-green-400' : 'text-white/80'}`} style={{ fontFamily: 'Cairo, sans-serif' }}>
                                   {teamNameAr[team.name] || team.name}
                                 </span>
